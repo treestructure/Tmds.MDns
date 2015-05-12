@@ -60,13 +60,7 @@ namespace Tmds.MDns
             {
                 _isEnabled = true;
 
-                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastInterface, IPAddress.HostToNetworkOrder(_index));
-                _socket.Bind(new IPEndPoint(IPAddress.Any, IPv4EndPoint.Port));
-                IPAddress ip = IPv4EndPoint.Address;
-                _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip, _index));
-                _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 1);
+                this._socket = new TcpSocket();
                 
                 StartReceive();
                 StartQuery();
@@ -642,7 +636,7 @@ namespace Tmds.MDns
         }
 
         private bool _isEnabled;
-        private Socket _socket;
+        private TcpSocket _socket;
         private readonly int _index;
         private readonly byte[] _buffer = new byte[9000];
         private readonly Dictionary<Name, ServiceInfo> _packetServiceInfos = new Dictionary<Name, ServiceInfo>();
